@@ -1014,9 +1014,16 @@ class ContentExtractor(object):
         on like paragraphs and tables
         """
         nodes_to_check = []
+        previousParent = None
         for tag in ['p', 'pre', 'td']:
             items = self.parser.getElementsByTag(doc, tag=tag)
-            nodes_to_check += items
+            for x in items:
+                if(previousParent is not None):
+                    if(self.parser.getParent(x) != previousParent):
+                        for k in self.parser.getChildren(self.parser.getParent(x)):
+                            if(self.parser.getText(k) != ""):
+                                nodes_to_check.append(k)
+                previousParent = self.parser.getParent(x)
         return nodes_to_check
 
     def is_table_and_no_para_exist(self, e):
