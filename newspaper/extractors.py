@@ -135,8 +135,8 @@ class ContentExtractor(object):
 
         # Try 1: Search popular author tags for authors
 
-        ATTRS = ['name', 'rel', 'itemprop', 'class', 'id']
-        VALS = ['author', 'byline', 'dc.creator', 'byl']
+        ATTRS = ['name', 'rel', 'itemprop', 'class', 'id','property']
+        VALS = ['author', 'byline', 'dc.creator', 'byl','article:author']
         matches = []
         authors = []
 
@@ -189,6 +189,7 @@ class ContentExtractor(object):
                     return None
 
         date_match = re.search(urls.STRICT_DATE_REGEX, url)
+
         if date_match:
             date_str = date_match.group(0)
             datetime_obj = parse_date_str(date_str)
@@ -217,6 +218,8 @@ class ContentExtractor(object):
             {'attribute': 'pubdate', 'value': 'pubdate',
              'content': 'datetime'},
             {'attribute': 'name', 'value': 'publish_date',
+             'content': 'content'},
+            {'attribute': 'property', 'value': 'article:modified_time',
              'content': 'content'},
         ]
         for known_meta_tag in PUBLISH_DATE_TAGS:
